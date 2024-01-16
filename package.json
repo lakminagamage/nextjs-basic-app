@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "decompress": "^4.2.1",
     "firebase": "^10.7.1",
+    "jszip": "^3.10.1",
     "next": "14.0.4",
+    "papaparse": "^5.4.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "unzipper": "^0.10.14"
   },
   "devDependencies": {
     "@types/node": "^20",
