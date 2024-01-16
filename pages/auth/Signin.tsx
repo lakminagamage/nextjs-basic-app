@@ -12,7 +12,7 @@ const Signin = () => {
             <div className="h-[400px] w-0.5 bg-white flex mx-auto my-auto rounded-md"></div>
 
             <div className="flex flex-col w-2/5">
-                <div className="flex flex-col mx-20 my-20">
+                <div className="flex flex-col mx-20 my-10">
                 <p className='text-3xl my-10 text-center'>Sign In</p>
                     <label htmlFor="email" className='text-md'>Email</label>
                     <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2'/>
@@ -21,8 +21,12 @@ const Signin = () => {
                     <button className='bg-teal text-white rounded-md p-2 mt-5'>Sign In</button>
 
                     <p className="text-center my-5">Don't have an account? <Link href='/auth/Signup' className='text-teal'>Sign up.</Link></p>
-
-                    div.grid.
+                    <div className='w-[80%] h-0.5 bg-white rounded-3xl mx-auto my-5'></div>
+                    <p className="text-center my-2">Or use SSO with</p>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''/></div>
+                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt=''/></div>
+                    </div>
                 </div>
              </div>    
             
