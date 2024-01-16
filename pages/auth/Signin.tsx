@@ -1,7 +1,42 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
+import React from 'react';
+import app from '../../firebase';
+
 
 const Signin = () => {
+
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const auth = getAuth(app);
+    const handleSignIn = () => {
+
+        if (email === "" || password === "" ) {
+            alert("Please fill out all fields!");
+            return;
+        }
+
+        
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorMessage);
+            // ..
+        });
+    
+
+   
+   
+}
+
     return (
        <div className='flex min-h-screen flex-col items-center justify-between p-24'> 
        <div className="w-full h-[600px] bg-black rounded-[50px] flex">
@@ -15,10 +50,10 @@ const Signin = () => {
                 <div className="flex flex-col mx-20 my-10">
                 <p className='text-3xl my-10 text-center'>Sign In</p>
                     <label htmlFor="email" className='text-md'>Email</label>
-                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2'/>
+                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Password</label>
-                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2'/>
-                    <button className='bg-teal text-white rounded-md p-2 mt-5'>Sign In</button>
+                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2' onChange={(e) => setPassword(e.target.value)}/>
+                    <button className='bg-teal text-white rounded-md p-2 mt-5' onClick={handleSignIn }>Sign In</button>
 
                     <p className="text-center my-5">Don't have an account? <Link href='/auth/Signup' className='text-teal'>Sign up.</Link></p>
                     <div className='w-[80%] h-0.5 bg-white rounded-3xl mx-auto my-5'></div>
@@ -33,6 +68,6 @@ const Signin = () => {
        </div>
     </div>
     );
-    }
+}
 
 export default Signin;
