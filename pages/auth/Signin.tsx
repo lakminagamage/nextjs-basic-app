@@ -2,13 +2,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import React from 'react';
+import app from '../../firebase';
 
 
 const Signin = () => {
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-
+    const auth = getAuth(app);
     const handleSignIn = () => {
 
         if (email === "" || password === "" ) {
@@ -16,7 +17,7 @@ const Signin = () => {
             return;
         }
 
-        const auth = getAuth();
+        
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 
