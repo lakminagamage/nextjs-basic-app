@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react';
 
 import app from '../../firebase';
-import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup,sendEmailVerification} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup,sendEmailVerification,GithubAuthProvider} from "firebase/auth";
 
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,10 +17,41 @@ const Signup = () => {
 
     const auth = getAuth(app);
 
+
+    const handleGoogleSignIn = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+        .then((result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential ? credential.accessToken : null;
+          const user = result.user;
+        }).catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          const email = error.customData.email;
+          const credential = GoogleAuthProvider.credentialFromError(error);
+        });
+        }
+
+
+        const handleGithubSignIn = () => {
+            const provider = new GithubAuthProvider();
+            signInWithPopup(auth, provider)
+            .then((result) => {
+              const credential = GithubAuthProvider.credentialFromResult(result);
+              const token = credential ? credential.accessToken : null;
+              const user = result.user;
+            }).catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              const email = error.customData.email;
+              const credential = GithubAuthProvider.credentialFromError(error);
+            });
+            }
+
    
     
-        const handleSignUpWithEmail = () => {
-
+    const handleSignUpWithEmail = () => {
             if (email === "" || password === "" ) {
                 toast.warn("Please fill out all fields!");
                 return;
@@ -82,8 +113,8 @@ const Signup = () => {
                     <p className="text-center my-5">Already have an account? <Link href='/auth/Signin' className='text-teal'>Sign In.</Link></p>
                     <p className="text-center my-2">Or use SSO with</p>
                     <div className="grid grid-cols-2 gap-2">
-                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''/></div>
-                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt=''/></div>
+                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''onClick={() => { handleGoogleSignIn() }}/></div>
+                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt='' onClick={() => { handleGithubSignIn() }}/></div>
                     </div>
                 </div>
              </div>    
