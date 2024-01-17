@@ -16,6 +16,7 @@
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18",
+    "react-toastify": "^10.0.3",
     "router-dom": "^2.2.11",
     "unzipper": "^0.10.14"
   },
