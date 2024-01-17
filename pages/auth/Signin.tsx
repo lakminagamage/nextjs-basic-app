@@ -4,6 +4,10 @@ import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import React from 'react';
 import app from '../../firebase';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const Signin = () => {
 
@@ -13,9 +17,11 @@ const Signin = () => {
     const handleSignIn = () => {
 
         if (email === "" || password === "" ) {
-            alert("Please fill out all fields!");
+            toast.warn("Please fill out all fields!");
             return;
         }
+
+        
 
         
         createUserWithEmailAndPassword(auth, email, password)
@@ -66,6 +72,21 @@ const Signin = () => {
              </div>    
             
        </div>
+       <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            
+        />
+
+        <ToastContainer />
     </div>
     );
 }
