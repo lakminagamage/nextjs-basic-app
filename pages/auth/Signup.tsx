@@ -1,8 +1,63 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react';
+
+import app from '../../firebase';
+import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup,sendEmailVerification} from "firebase/auth";
+
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Signup = () => {
+    
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
+    const auth = getAuth(app);
+
+    if (email === "" || password === "" ) {
+        toast.warn("Please fill out all fields!");
+        return;
+    }
+    else if(password.length<6){
+        toast.warn("Password must be at least 6 characters!");
+
+
+    }else{
+    
+        const handleSignUpWithEmail = () => {
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+            const user = userCredential.user;
+            if (user) {
+                sendEmailVerification(user)
+                    .then(async () => {
+                        console.log("Verification email sent to " + email);
+                        
+                    });
+            }
+
+            })
+            .catch((error) => {
+                switch (error.code) {
+                    case "auth/email-already-in-use":
+                        toast.error("Email already in use!");
+                        break;
+                    case "auth/invalid-email":
+                        toast.error("Invalid email!");
+                        break;
+                    case "auth/weak-password":
+                        toast.error("Weak password!");
+                        break;
+                    default:
+                        toast.error("Error occured!");
+                        break;
+                }
+            });
+        }
+    }
     return (
     <div className='flex min-h-screen flex-col items-center justify-between p-24'> 
        <div className="w-full h-[600px] bg-black rounded-[50px] flex">
@@ -16,9 +71,9 @@ const Signup = () => {
                 <div className="flex flex-col mx-20 my-5">
                 <p className='text-3xl my-10 text-center'>Sign Up</p>
                     <label htmlFor="email" className='text-md'>Email</label>
-                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2'/>
+                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Password</label>
-                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2'/>
+                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2'onChange={(e) => setPassword(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Confirm Password</label>
                     <input type="password" name="password" placeholder='Retype Password' id="password" className='border-2 border-black rounded-md p-2'/>
                     <button className='bg-teal text-white rounded-md p-2 mt-5'>Sign Up</button>
@@ -32,6 +87,21 @@ const Signup = () => {
              </div>    
             
        </div>
+       <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            
+        />
+
+        <ToastContainer />
     </div>
     );
     }
