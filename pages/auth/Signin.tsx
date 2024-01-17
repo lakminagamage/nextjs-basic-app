@@ -20,7 +20,11 @@ const Signin = () => {
             toast.warn("Please fill out all fields!");
             return;
         }
+        else if(password.length<6){
+            toast.warn("Password must be at least 6 characters!");
 
+
+        }else{
         
 
         
@@ -29,15 +33,17 @@ const Signin = () => {
             // Signed in 
             const user = userCredential.user;
             console.log(user);
+            toast.success("Signed in successfully!");
             // ...
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorMessage);
+            toast.error("Something went wrong! " + errorMessage);
             // ..
         });
-    
+        }
 
    
    
