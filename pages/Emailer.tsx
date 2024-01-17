@@ -1,6 +1,6 @@
 import {useState } from 'react';
 import Papa from 'papaparse';
-import { set } from 'firebase/database';
+import nodemailer from 'nodemailer';
 
 const Emailer = () => {
     var jsZip = require('jszip')
@@ -9,26 +9,50 @@ const Emailer = () => {
     const[error, setError] = useState(false);
     const [file, setFile] = useState(null);
 
-    const handleCSVFileUpload = (e) =>{
+    const handleCSVFileUpload = (e : any) =>{
         setError(false);
         console.log("workimg");
         Papa.parse(e.target.files[0], {
             header: true,
             skipEmptyLines: true,
-            complete:  (results) => {
+            complete:  (results : any) => {
               console.log(results.data)
               setCsvData(results.data);
             },
           });
     }
 
-    const handleZIPUpload = (e) => {
-        console.log("zipapp")
-        jsZip.loadAsync(e.target.files[0]).then(function (zip) {
-            console.log("zipapp2")
-            Object.keys(zip.files).forEach(function (filename) {
-                console.log(filename)
 
+    const sendEmail = (e : any, filename : any, email : any) => {
+        var transport = nodemailer.createTransport({
+            host: "submit.uom.lk",
+            port: 587,
+            secure: false,
+            auth: {
+              user: "salary",
+              pass: "password"
+            }
+        });
+
+        var mailOptions = {
+            from: '"salary@uom.lk',
+            to: 'pramodyalakmina@gmail.com',
+            subject: 'Email test',
+            text: 'Test text',
+            attachments: [
+              {
+                filename: {filename},
+
+              }
+            ]
+          };
+    } 
+
+
+    const handleZIPUpload = (e : any) => {
+        jsZip.loadAsync(e.target.files[0]).then(function (zip : any) {
+            Object.keys(zip.files).forEach(function (filename) {
+                
             })
           })
     }
@@ -36,8 +60,8 @@ const Emailer = () => {
 
     return (
         <div className="flex min-h-screen flex-col p-24">
-            <p className="text-center text-lg">PaySheet Sender - Salary Department</p>
-            <p className="text-center text-lg">University of Moratuwa</p>
+            {/* <p className="text-center text-lg">PaySheet Sender - Salary Department</p>
+            <p className="text-center text-lg">University of Moratuwa</p> */}
             <div className="container w-full h-[600px]">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload file</label>
                 <input
