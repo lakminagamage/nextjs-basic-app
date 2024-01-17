@@ -17,46 +17,48 @@ const Signup = () => {
 
     const auth = getAuth(app);
 
-    if (email === "" || password === "" ) {
-        toast.warn("Please fill out all fields!");
-        return;
-    }
-    else if(password.length<6){
-        toast.warn("Password must be at least 6 characters!");
-
-
-    }else{
+   
     
         const handleSignUpWithEmail = () => {
-            createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-            const user = userCredential.user;
-            if (user) {
-                sendEmailVerification(user)
-                    .then(async () => {
-                        console.log("Verification email sent to " + email);
-                        
-                    });
-            }
 
-            })
-            .catch((error) => {
-                switch (error.code) {
-                    case "auth/email-already-in-use":
-                        toast.error("Email already in use!");
-                        break;
-                    case "auth/invalid-email":
-                        toast.error("Invalid email!");
-                        break;
-                    case "auth/weak-password":
-                        toast.error("Weak password!");
-                        break;
-                    default:
-                        toast.error("Error occured!");
-                        break;
+            if (email === "" || password === "" ) {
+                toast.warn("Please fill out all fields!");
+                return;
+            }
+            else if(password.length<6){
+                toast.warn("Password must be at least 6 characters!");
+        
+        
+            }else{
+                createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                const user = userCredential.user;
+                if (user) {
+                    sendEmailVerification(user)
+                        .then(async () => {
+                            console.log("Verification email sent to " + email);
+                            
+                        });
                 }
-            });
-        }
+
+                })
+                .catch((error) => {
+                    switch (error.code) {
+                        case "auth/email-already-in-use":
+                            toast.error("Email already in use!");
+                            break;
+                        case "auth/invalid-email":
+                            toast.error("Invalid email!");
+                            break;
+                        case "auth/weak-password":
+                            toast.error("Weak password!");
+                            break;
+                        default:
+                            toast.error("Error occured!");
+                            break;
+                    }
+                });
+            }
     }
     return (
     <div className='flex min-h-screen flex-col items-center justify-between p-24'> 
