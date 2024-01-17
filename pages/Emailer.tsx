@@ -1,11 +1,9 @@
 import {useState } from 'react';
 import Papa from 'papaparse';
-import JSZip from "jszip";
-import * as fs from 'fs';
+import { set } from 'firebase/database';
 
 const Emailer = () => {
-    const JsZip = require("jszip")
-    
+    var jsZip = require('jszip')
 
     const [csvData, setCsvData] = useState([]);
     const[error, setError] = useState(false);
@@ -19,22 +17,29 @@ const Emailer = () => {
             skipEmptyLines: true,
             complete:  (results) => {
               console.log(results.data)
+              setCsvData(results.data);
             },
           });
     }
 
     const handleZIPUpload = (e) => {
-        
+        console.log("zipapp")
+        jsZip.loadAsync(e.target.files[0]).then(function (zip) {
+            console.log("zipapp2")
+            Object.keys(zip.files).forEach(function (filename) {
+                console.log(filename)
+
+            })
+          })
     }
 
 
     return (
         <div className="flex min-h-screen flex-col p-24">
-            {/* <p className="text-center text-lg">PaySheet Sender - Salary Department</p>
-            <p className="text-center text-lg">University of Moratuwa</p> */}
+            <p className="text-center text-lg">PaySheet Sender - Salary Department</p>
+            <p className="text-center text-lg">University of Moratuwa</p>
             <div className="container w-full h-[600px]">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload file</label>
-                {/* <input onChange={handleFileChange(e)}  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" /> */}
                 <input
                     type="file"
                     name="file"
