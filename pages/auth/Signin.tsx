@@ -1,8 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup, GithubAuthProvider} from "firebase/auth";
 import React from 'react';
 import app from '../../firebase';
+
+
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,13 +16,50 @@ const Signin = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const auth = getAuth(app);
-    const handleSignIn = () => {
+
+    
+
+    const handleGoogleSignIn = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+        .then((result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential ? credential.accessToken : null;
+          const user = result.user;
+        }).catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          const email = error.customData.email;
+          const credential = GoogleAuthProvider.credentialFromError(error);
+        });
+        }
+
+        const handleGithubSignIn = () => {
+            const provider = new GithubAuthProvider();
+            signInWithPopup(auth, provider)
+            .then((result) => {
+              const credential = GithubAuthProvider.credentialFromResult(result);
+              const token = credential ? credential.accessToken : null;
+              const user = result.user;
+            }).catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              const email = error.customData.email;
+              const credential = GithubAuthProvider.credentialFromError(error);
+            });
+            }
+    
+    const handleSignInWithEmail = () => {
 
         if (email === "" || password === "" ) {
             toast.warn("Please fill out all fields!");
             return;
         }
+        else if(password.length<6){
+            toast.warn("Password must be at least 6 characters!");
 
+
+        }else{
         
 
         
@@ -29,15 +68,17 @@ const Signin = () => {
             // Signed in 
             const user = userCredential.user;
             console.log(user);
+            toast.success("Signed in successfully!");
             // ...
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorMessage);
+            toast.error("Something went wrong! " + errorMessage);
             // ..
         });
-    
+        }
 
    
    
@@ -59,14 +100,14 @@ const Signin = () => {
                     <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Password</label>
                     <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2' onChange={(e) => setPassword(e.target.value)}/>
-                    <button className='bg-teal text-white rounded-md p-2 mt-5' onClick={handleSignIn }>Sign In</button>
+                    <button className='bg-teal text-white rounded-md p-2 mt-5' onClick={handleSignInWithEmail }>Sign In</button>
 
                     <p className="text-center my-5">Don't have an account? <Link href='/auth/Signup' className='text-teal'>Sign up.</Link></p>
                     <div className='w-[80%] h-0.5 bg-white rounded-3xl mx-auto my-5'></div>
                     <p className="text-center my-2">Or use SSO with</p>
                     <div className="grid grid-cols-2 gap-2">
-                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''/></div>
-                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt=''/></div>
+                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt='' onClick={() => { handleGoogleSignIn() }}/></div>
+                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt='' onClick={() => { handleGithubSignIn() }}/></div>
                     </div>
                 </div>
              </div>    
