@@ -1,8 +1,96 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react';
+
+import app from '../../firebase';
+import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup,sendEmailVerification,GithubAuthProvider} from "firebase/auth";
+
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Signup = () => {
+    
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
+    const auth = getAuth(app);
+
+
+    const handleGoogleSignIn = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+        .then((result) => {
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential ? credential.accessToken : null;
+          const user = result.user;
+        }).catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          const email = error.customData.email;
+          const credential = GoogleAuthProvider.credentialFromError(error);
+        });
+        }
+
+
+        const handleGithubSignIn = () => {
+            const provider = new GithubAuthProvider();
+            signInWithPopup(auth, provider)
+            .then((result) => {
+              const credential = GithubAuthProvider.credentialFromResult(result);
+              const token = credential ? credential.accessToken : null;
+              const user = result.user;
+            }).catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              const email = error.customData.email;
+              const credential = GithubAuthProvider.credentialFromError(error);
+            });
+            }
+
+   
+    
+    const handleSignUpWithEmail = () => {
+            if (email === "" || password === "" ) {
+                toast.warn("Please fill out all fields!");
+                return;
+            }
+            else if(password.length<6){
+                toast.warn("Password must be at least 6 characters!");
+        
+        
+            }else{
+                createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                const user = userCredential.user;
+                if (user) {
+                    sendEmailVerification(user)
+                        .then(async () => {
+                            console.log("Verification email sent to " + email);
+                            
+                        });
+                }
+
+                })
+                .catch((error) => {
+                    switch (error.code) {
+                        case "auth/email-already-in-use":
+                            toast.error("Email already in use!");
+                            break;
+                        case "auth/invalid-email":
+                            toast.error("Invalid email!");
+                            break;
+                        case "auth/weak-password":
+                            toast.error("Weak password!");
+                            break;
+                        default:
+                            toast.error("Error occured!");
+                            break;
+                    }
+                });
+            }
+    }
     return (
     <div className='flex min-h-screen flex-col items-center justify-between p-24'> 
        <div className="w-full h-[600px] bg-black rounded-[50px] flex">
@@ -16,22 +104,37 @@ const Signup = () => {
                 <div className="flex flex-col mx-20 my-5">
                 <p className='text-3xl my-10 text-center'>Sign Up</p>
                     <label htmlFor="email" className='text-md'>Email</label>
-                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2'/>
+                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Password</label>
-                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2'/>
+                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2'onChange={(e) => setPassword(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Confirm Password</label>
                     <input type="password" name="password" placeholder='Retype Password' id="password" className='border-2 border-black rounded-md p-2'/>
                     <button className='bg-teal text-white rounded-md p-2 mt-5'>Sign Up</button>
                     <p className="text-center my-5">Already have an account? <Link href='/auth/Signin' className='text-teal'>Sign In.</Link></p>
                     <p className="text-center my-2">Or use SSO with</p>
                     <div className="grid grid-cols-2 gap-2">
-                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''/></div>
-                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt=''/></div>
+                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''onClick={() => { handleGoogleSignIn() }}/></div>
+                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt='' onClick={() => { handleGithubSignIn() }}/></div>
                     </div>
                 </div>
              </div>    
             
        </div>
+       <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            
+        />
+
+        <ToastContainer />
     </div>
     );
     }
