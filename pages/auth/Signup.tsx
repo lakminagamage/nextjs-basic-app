@@ -62,7 +62,7 @@ const Signup = () => {
                 if (user) {
                     sendEmailVerification(user)
                         .then(async () => {
-                            console.log("Verification email sent to " + email);
+                            toast.success("Verification email sent to " + email+ ". Please verify your email and Signin.");
                             
                         });
                 }
@@ -99,11 +99,11 @@ const Signup = () => {
                 <div className="flex flex-col mx-20 my-5">
                 <p className='text-3xl my-10 text-center'>Sign Up</p>
                     <label htmlFor="email" className='text-md'>Email</label>
-                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
+                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='text-black border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Password</label>
-                    <input type="password" name="password1" placeholder='Password' id="password1" className='border-2 border-black rounded-md p-2'onChange={(e) => setPassword1(e.target.value)}/>
+                    <input type="password" name="password1" placeholder='Password' id="password1" className='text-black border-2 border-black rounded-md p-2'onChange={(e) => setPassword1(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Confirm Password</label>
-                    <input type="password" name="password2" placeholder='Retype Password' id="password2" className='border-2 border-black rounded-md p-2' onChange={(e) => setPassword2(e.target.value)}/>
+                    <input type="password" name="password2" placeholder='Retype Password' id="password2" className='text-black border-2 border-black rounded-md p-2' onChange={(e) => setPassword2(e.target.value)}/>
                     <button className='bg-teal text-white rounded-md p-2 mt-5' onClick={handleSignUpWithEmail}>Sign Up</button>
                     <p className="text-center my-5">Already have an account? <Link href='/auth/Signin' className='text-teal'>Sign In.</Link></p>
                     <p className="text-center my-2">Or use SSO with</p>

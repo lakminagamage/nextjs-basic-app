@@ -25,6 +25,7 @@ const Signin = () => {
           const credential = GoogleAuthProvider.credentialFromResult(result);
           const token = credential ? credential.accessToken : null;
           const user = result.user;
+          toast.success('Successfully signed in with Google');
         }).catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
@@ -37,7 +38,9 @@ const Signin = () => {
             const provider = new GithubAuthProvider();
             signInWithPopup(auth, provider)
             .then((result) => {
+              toast.success('Successfully signed in with Github');
               const credential = GithubAuthProvider.credentialFromResult(result);
+
               
               const user = result.user;
             }).catch((error) => {
@@ -64,7 +67,11 @@ const Signin = () => {
                     if(user.emailVerified == false){
                         toast.error('Email not verified. Please verify your email.');
                         return;
+                    }else{
+                        toast.success('Successfully signed in with user credentials!');
+                        window.location.href = '/';
                     }
+
                    
                 })
                 .catch((error) => {
@@ -105,9 +112,9 @@ const Signin = () => {
                 <div className="flex flex-col mx-20 my-10">
                 <p className='text-3xl my-10 text-center'>Sign In</p>
                     <label htmlFor="email" className='text-md'>Email</label>
-                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
+                    <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2 text-black' onChange={(e) => setEmail(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Password</label>
-                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2' onChange={(e) => setPassword(e.target.value)}/>
+                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2 text-black' onChange={(e) => setPassword(e.target.value)}/>
                     <button className='bg-teal text-white rounded-md p-2 mt-5' onClick={handleSignInWithEmail }>Sign In</button>
 
                     <p className="text-center my-5">Don't have an account? <Link href='/auth/Signup' className='text-teal'>Sign up.</Link></p>
