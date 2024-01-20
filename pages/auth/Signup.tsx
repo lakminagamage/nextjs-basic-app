@@ -1,11 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react';
-
-import app from '../../firebase';
-import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup,sendEmailVerification,GithubAuthProvider} from "firebase/auth";
-
-
+import {auth} from '../../firebase';
+import {createUserWithEmailAndPassword,GoogleAuthProvider, signInWithPopup,sendEmailVerification,GithubAuthProvider} from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,17 +10,13 @@ import 'react-toastify/dist/ReactToastify.css';
 const Signup = () => {
     
     const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-
-    const auth = getAuth(app);
-
-
+    const [password1, setPassword1] = React.useState('');
+    const [password2, setPassword2] = React.useState('');
     const handleGoogleSignIn = () => {
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
         .then((result) => {
           const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential ? credential.accessToken : null;
           const user = result.user;
         }).catch((error) => {
           const errorCode = error.code;
@@ -52,16 +45,18 @@ const Signup = () => {
    
     
     const handleSignUpWithEmail = () => {
-            if (email === "" || password === "" ) {
+            if (email === "" || password1 === "" || password2 === "") {
                 toast.warn("Please fill out all fields!");
                 return;
             }
-            else if(password.length<6){
+            else if(password1.length<6){
                 toast.warn("Password must be at least 6 characters!");
-        
-        
+            }
+            else if(password1!=password2){
+                toast.warn("Enter emails again")
+            
             }else{
-                createUserWithEmailAndPassword(auth, email, password)
+                createUserWithEmailAndPassword(auth, email, password1)
                 .then((userCredential) => {
                 const user = userCredential.user;
                 if (user) {
@@ -106,15 +101,15 @@ const Signup = () => {
                     <label htmlFor="email" className='text-md'>Email</label>
                     <input type="email" placeholder='user@hypercube.com' name="email" id="email" className='border-2 border-black rounded-md p-2' onChange={(e) => setEmail(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Password</label>
-                    <input type="password" name="password" placeholder='Password' id="password" className='border-2 border-black rounded-md p-2'onChange={(e) => setPassword(e.target.value)}/>
+                    <input type="password" name="password1" placeholder='Password' id="password1" className='border-2 border-black rounded-md p-2'onChange={(e) => setPassword1(e.target.value)}/>
                     <label htmlFor="password" className='text-md'>Confirm Password</label>
-                    <input type="password" name="password" placeholder='Retype Password' id="password" className='border-2 border-black rounded-md p-2'/>
-                    <button className='bg-teal text-white rounded-md p-2 mt-5'>Sign Up</button>
+                    <input type="password" name="password2" placeholder='Retype Password' id="password2" className='border-2 border-black rounded-md p-2' onChange={(e) => setPassword2(e.target.value)}/>
+                    <button className='bg-teal text-white rounded-md p-2 mt-5' onClick={handleSignUpWithEmail}>Sign Up</button>
                     <p className="text-center my-5">Already have an account? <Link href='/auth/Signin' className='text-teal'>Sign In.</Link></p>
                     <p className="text-center my-2">Or use SSO with</p>
                     <div className="grid grid-cols-2 gap-2">
-                        <div className='flex justify-end mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''onClick={() => { handleGoogleSignIn() }}/></div>
-                        <div className='flex justify-start mx-5'><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt='' onClick={() => { handleGithubSignIn() }}/></div>
+                        <div className='flex justify-end mx-5' onClick={() => { handleGoogleSignIn() }}><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''/></div>
+                        <div className='flex justify-start mx-5'  onClick={() => { handleGithubSignIn() }}><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt=''/></div>
                     </div>
                 </div>
              </div>    
