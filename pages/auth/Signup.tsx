@@ -18,6 +18,7 @@ const Signup = () => {
         .then((result) => {
           const credential = GoogleAuthProvider.credentialFromResult(result);
           const user = result.user;
+          console.log(user);
         }).catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
@@ -108,8 +109,8 @@ const Signup = () => {
                     <p className="text-center my-5">Already have an account? <Link href='/auth/Signin' className='text-teal'>Sign In.</Link></p>
                     <p className="text-center my-2">Or use SSO with</p>
                     <div className="grid grid-cols-2 gap-2">
-                        <div className='flex justify-end mx-5' onClick={() => { handleGoogleSignIn() }}><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''/></div>
-                        <div className='flex justify-start mx-5'  onClick={() => { handleGithubSignIn() }}><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt=''/></div>
+                        <div className='flex justify-end mx-5' onClick={ handleGoogleSignIn }><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt=''/></div>
+                        <div className='flex justify-start mx-5'  onClick={ handleGithubSignIn}><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt=''/></div>
                     </div>
                 </div>
              </div>    

@@ -121,8 +121,8 @@ const Signin = () => {
                     <div className='w-[80%] h-0.5 bg-white rounded-3xl mx-auto my-5'></div>
                     <p className="text-center my-2">Or use SSO with</p>
                     <div className="grid grid-cols-2 gap-2">
-                        <div className='flex justify-end mx-5' onClick={() => { handleGoogleSignIn() }}><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt='' /></div>
-                        <div className='flex justify-start mx-5' onClick={() => { handleGithubSignIn() }}><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt='' /></div>
+                        <div className='flex justify-end mx-5' onClick={ handleGoogleSignIn}><Image className='rounded-lg drop-shadow-lg' src="/images/google.png" width={50} height={50} alt='' /></div>
+                        <div className='flex justify-start mx-5' onClick={ handleGithubSignIn}><Image className='rounded-lg drop-shadow-lg' src="/images/github-logo.png" width={50} height={50} alt='' /></div>
                     </div>
                 </div>
              </div>    
