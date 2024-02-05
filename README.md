@@ -1,4 +1,5 @@
 This is a template repository for bootstrapping a firebase auth based nextJS app. 
+Repo created as a supplementary resource for medium article about Firebase Authentication by @vshwanilgv at https://vshwanilgv.medium.com.
 
 ## Getting Started
 
